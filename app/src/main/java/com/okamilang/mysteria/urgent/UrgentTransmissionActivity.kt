@@ -1,7 +1,7 @@
 package com.okamilang.mysteria.urgent
 
 import android.content.Context
-import android.media.AudioManager
+import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +15,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.okamilang.mysteria.MainActivity
 import com.okamilang.mysteria.ui.theme.MysteriaTheme
 
 /**
@@ -61,8 +62,7 @@ class UrgentTransmissionActivity : ComponentActivity() {
                         body = body,
                         onRepondre = {
                             stopAlerte()
-                            // TODO: ouvrir la conversation. Pour l'instant on ferme
-                            // simplement, l'utilisateur ouvrira l'app.
+                            ouvrirConversation(fromUid, fromCode)
                             finishAndRemoveTask()
                         },
                         onDifferer = {
@@ -78,6 +78,16 @@ class UrgentTransmissionActivity : ComponentActivity() {
     override fun onDestroy() {
         stopAlerte()
         super.onDestroy()
+    }
+
+    private fun ouvrirConversation(otherUid: String, otherCode: String) {
+        if (otherUid.isBlank()) return
+        val intent = Intent(this, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            putExtra(MainActivity.EXTRA_OUVRIR_CONVERSATION_UID, otherUid)
+            putExtra(MainActivity.EXTRA_OUVRIR_CONVERSATION_CODE, otherCode)
+        }
+        startActivity(intent)
     }
 
     private fun startVibration() {

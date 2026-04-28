@@ -1,14 +1,13 @@
 package com.okamilang.mysteria.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.okamilang.mysteria.data.AuthRepository
 import com.okamilang.mysteria.ui.screens.ConversationScreen
 import com.okamilang.mysteria.ui.screens.DepechesScreen
@@ -30,13 +29,32 @@ object Routes {
     }
 }
 
+/** Demande d'ouverture directe d'une conversation (deep-link interne). */
+data class OuvertureConversation(val uid: String, val code: String)
+
 @Composable
-fun MysteriaApp() {
+fun MysteriaApp(
+    ouvertureConversation: OuvertureConversation? = null,
+    onOuvertureConsommee: () -> Unit = {}
+) {
     val navController = rememberNavController()
     val user by remember { AuthRepository.authStateFlow() }
         .collectAsState(initial = AuthRepository.currentUser)
 
     val start = if (user == null) Routes.IDENTIFICATION else Routes.DEPECHES
+
+    // Quand un deep-link "ouvrir conversation" arrive (depuis l'écran
+    // de Transmission Urgente qui tape Répondre), on navigue dès que
+    // l'utilisateur est authentifié.
+    LaunchedEffect(ouvertureConversation, user) {
+        val ouv = ouvertureConversation ?: return@LaunchedEffect
+        if (user == null) return@LaunchedEffect
+        navController.navigate(Routes.conversation(ouv.uid, ouv.code)) {
+            // On vide la pile pour atterrir directement dans la conversation.
+            popUpTo(Routes.DEPECHES) { inclusive = false }
+        }
+        onOuvertureConsommee()
+    }
 
     NavHost(navController = navController, startDestination = start) {
         composable(Routes.IDENTIFICATION) {
@@ -76,8 +94,8 @@ fun MysteriaApp() {
         composable(
             route = Routes.CONVERSATION,
             arguments = listOf(
-                navArgument("uid") { type = NavType.StringType },
-                navArgument("code") { type = NavType.StringType }
+                androidx.navigation.navArgument("uid") { type = androidx.navigation.NavType.StringType },
+                androidx.navigation.navArgument("code") { type = androidx.navigation.NavType.StringType }
             )
         ) { entry ->
             val uid = URLDecoder.decode(entry.arguments?.getString("uid").orEmpty(), "UTF-8")
