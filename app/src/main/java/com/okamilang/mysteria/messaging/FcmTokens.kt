@@ -28,13 +28,13 @@ object FcmTokens {
     /** Variante synchrone pour le callback onNewToken du service. */
     fun onNewToken(token: String) {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        FirebaseFirestore.getInstance().doc("agents/$uid")
+        FirebaseFirestore.getInstance().document("agents/$uid")
             .update("fcmTokens", FieldValue.arrayUnion(token))
             .addOnFailureListener { Log.w(TAG, "onNewToken échec", it) }
     }
 
     private suspend fun attach(uid: String, token: String) {
-        FirebaseFirestore.getInstance().doc("agents/$uid")
+        FirebaseFirestore.getInstance().document("agents/$uid")
             .update("fcmTokens", FieldValue.arrayUnion(token))
             .await()
         Log.i(TAG, "Jeton FCM attaché à l'agent $uid")
@@ -45,7 +45,7 @@ object FcmTokens {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         runCatching {
             val token = FirebaseMessaging.getInstance().token.await()
-            FirebaseFirestore.getInstance().doc("agents/$uid")
+            FirebaseFirestore.getInstance().document("agents/$uid")
                 .update("fcmTokens", FieldValue.arrayRemove(token))
                 .await()
         }.onFailure { Log.w(TAG, "unregister échec", it) }
