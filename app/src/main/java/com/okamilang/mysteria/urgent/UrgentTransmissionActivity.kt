@@ -15,6 +15,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.app.NotificationManagerCompat
 import com.okamilang.mysteria.MainActivity
 import com.okamilang.mysteria.ui.theme.MysteriaTheme
 
@@ -34,6 +35,7 @@ class UrgentTransmissionActivity : ComponentActivity() {
 
     private var vibrator: Vibrator? = null
     private var ringtone: android.media.Ringtone? = null
+    private var notifId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +52,8 @@ class UrgentTransmissionActivity : ComponentActivity() {
         val fromCode = intent.getStringExtra(EXTRA_FROM_CODE) ?: "Agent inconnu"
         val fromUid = intent.getStringExtra(EXTRA_FROM_UID).orEmpty()
         val body = intent.getStringExtra(EXTRA_BODY).orEmpty()
+        val messageId = intent.getStringExtra(EXTRA_MESSAGE_ID).orEmpty()
+        notifId = messageId.hashCode()
 
         startVibration()
         startSound()
@@ -128,5 +132,10 @@ class UrgentTransmissionActivity : ComponentActivity() {
         vibrator = null
         runCatching { ringtone?.stop() }
         ringtone = null
+        // On annule la notification système qui maintient le ringtone
+        // d'incoming-call en boucle (USAGE_NOTIFICATION_RINGTONE).
+        if (notifId != 0) {
+            runCatching { NotificationManagerCompat.from(this).cancel(notifId) }
+        }
     }
 }

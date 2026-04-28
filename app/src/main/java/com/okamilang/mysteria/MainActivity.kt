@@ -70,9 +70,17 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun lireExtraOuvertureConversation(intent: Intent?) {
-        val uid = intent?.getStringExtra(EXTRA_OUVRIR_CONVERSATION_UID).orEmpty()
-        val code = intent?.getStringExtra(EXTRA_OUVRIR_CONVERSATION_CODE).orEmpty()
-        if (uid.isNotBlank() && code.isNotBlank()) {
+        intent ?: return
+        // Deux sources possibles :
+        // 1) un tap sur une notification FCM normale → la `data` du payload
+        //    est ajoutée comme extras (fromUid, fromCode...)
+        // 2) le bouton Répondre de l'écran urgent → on a posé nos propres
+        //    extras EXTRA_OUVRIR_CONVERSATION_*.
+        val uid = intent.getStringExtra(EXTRA_OUVRIR_CONVERSATION_UID)
+            ?: intent.getStringExtra("fromUid")
+        val code = intent.getStringExtra(EXTRA_OUVRIR_CONVERSATION_CODE)
+            ?: intent.getStringExtra("fromCode")
+        if (!uid.isNullOrBlank() && !code.isNullOrBlank()) {
             ouvertureConversation = OuvertureConversation(uid, code)
         }
     }
