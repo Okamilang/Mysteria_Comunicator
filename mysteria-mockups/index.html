@@ -1,0 +1,1617 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mysteria Communicator — Maquettes Visuelles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=IM+Fell+English+SC&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     MYSTERIA COMMUNICATOR — MAQUETTES STATIQUES
+     Univers : noir 1930 + occultisme cthulhien + steampunk léger
+     ============================================================ */
+
+  :root{
+    --brun-tres-sombre:#1a1410;
+    --brun-fonce:#2a1f17;
+    --papier:#d9c39a;
+    --papier-clair:#e9d6ad;
+    --papier-fonce:#b89a6a;
+    --encre:#1a0f08;
+    --encre-clair:#3a2a1c;
+    --laiton:#b8893a;
+    --laiton-clair:#d9a754;
+    --laiton-sombre:#7a5520;
+    --rouge-sceau:#6e1e1e;
+    --rouge-vif:#a32a2a;
+    --vert-occulte:#4a6a3e;
+    --vert-vif:#6e9050;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  html,body{
+    background:
+      radial-gradient(ellipse at top,#2a1f17 0%,#15100c 60%,#0a0705 100%);
+    background-attachment:fixed;
+    min-height:100%;
+    color:var(--papier);
+    font-family:'Special Elite',serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  body::before{
+    /* grain papier global */
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity:.55;
+    mix-blend-mode:overlay;
+  }
+
+  /* ===================== EN-TETE DE PAGE ===================== */
+
+  .page-head{
+    position:relative;z-index:2;
+    text-align:center;
+    padding:64px 24px 24px;
+    border-bottom:1px double #5a3f1f;
+    margin-bottom:32px;
+  }
+  .page-head h1{
+    font-family:'IM Fell English SC',serif;
+    font-size:clamp(32px,5vw,58px);
+    letter-spacing:.18em;
+    color:var(--laiton-clair);
+    text-shadow:0 0 1px #000,0 2px 0 #000,0 4px 22px #000a;
+    margin-bottom:10px;
+  }
+  .page-head .sub{
+    font-family:'Cinzel',serif;
+    font-size:clamp(13px,1.4vw,16px);
+    letter-spacing:.32em;
+    color:var(--papier-fonce);
+    text-transform:uppercase;
+  }
+  .page-head .ornement{
+    margin:18px auto 0;
+    display:flex;align-items:center;justify-content:center;gap:14px;
+    color:var(--laiton);
+    font-size:13px;letter-spacing:.4em;
+  }
+  .page-head .ornement::before,
+  .page-head .ornement::after{
+    content:"";flex:0 0 120px;height:1px;
+    background:linear-gradient(90deg,transparent,var(--laiton),transparent);
+  }
+
+  /* engrenages décoratifs aux coins de la page */
+  .page-head .gear-deco{
+    position:absolute;width:90px;height:90px;opacity:.22;
+    animation:rotate 60s linear infinite;
+  }
+  .page-head .gear-deco.left{top:18px;left:18px}
+  .page-head .gear-deco.right{top:18px;right:18px;animation-direction:reverse;animation-duration:80s}
+  @keyframes rotate{to{transform:rotate(360deg)}}
+
+  /* ===================== GRILLE DE TELEPHONES ===================== */
+
+  .grille{
+    position:relative;z-index:2;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(380px,1fr));
+    gap:48px 28px;
+    max-width:1720px;
+    margin:0 auto;
+    padding:24px 24px 80px;
+    justify-items:center;
+  }
+
+  .ecran-bloc{display:flex;flex-direction:column;align-items:center;gap:14px}
+
+  .ecran-titre{
+    font-family:'Cinzel',serif;font-weight:700;
+    color:var(--laiton-clair);
+    letter-spacing:.32em;
+    font-size:13px;
+    text-transform:uppercase;
+    text-align:center;
+    border:1px solid #5a3f1f;
+    padding:6px 18px;
+    background:#1a120c;
+    box-shadow:inset 0 0 12px #000;
+  }
+  .ecran-num{
+    color:var(--rouge-vif);
+    font-family:'IM Fell English SC',serif;
+    margin-right:8px;
+    font-size:14px;
+  }
+
+  /* ===================== CADRE TELEPHONE ===================== */
+
+  .phone{
+    width:360px;height:740px;
+    background:#000;
+    border-radius:42px;
+    padding:14px;
+    position:relative;
+    box-shadow:
+      0 0 0 2px #2a2a2a,
+      0 0 0 4px #0a0a0a,
+      0 30px 60px -10px #000c,
+      0 0 80px -20px var(--laiton);
+  }
+  .phone::before{ /* encoche */
+    content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);
+    width:130px;height:24px;background:#000;
+    border-radius:0 0 16px 16px;z-index:5;
+  }
+  .phone::after{ /* haut-parleur dans encoche */
+    content:"";position:absolute;top:22px;left:50%;transform:translateX(-50%);
+    width:48px;height:5px;background:#1a1a1a;border-radius:3px;z-index:6;
+    box-shadow:60px 0 0 -1px #1a1a1a;
+  }
+  .screen{
+    width:100%;height:100%;border-radius:30px;overflow:hidden;
+    position:relative;
+    background:var(--papier);
+    color:var(--encre);
+    font-size:13px;
+    display:flex;flex-direction:column;
+  }
+
+  /* texture papier vieilli sur l'écran */
+  .screen::before{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.06 0 0 0 0 0.03 0 0 0 0.45 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>"),
+      radial-gradient(ellipse at center,transparent 40%,#8b6a3a55 100%);
+    mix-blend-mode:multiply;
+  }
+  .screen::after{
+    /* reflet verre */
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:8;
+    background:linear-gradient(135deg,#fff2 0%,transparent 30%,transparent 70%,#0003 100%);
+  }
+
+  .screen-inner{position:relative;z-index:2;display:flex;flex-direction:column;height:100%}
+
+  /* ===================== BARRE DE STATUT ===================== */
+
+  .statusbar{
+    flex:0 0 28px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:6px 22px 0;
+    font-family:'Special Elite';
+    font-size:11px;color:var(--encre);
+    letter-spacing:.04em;
+  }
+  .statusbar .tres{display:flex;gap:4px;align-items:center}
+  .statusbar svg{width:13px;height:13px;display:block}
+
+  /* ===================== EN-TETE ECRAN ===================== */
+
+  .app-head{
+    flex:0 0 auto;
+    padding:14px 18px 10px;
+    border-bottom:1px solid #6a4a2266;
+    display:flex;align-items:center;justify-content:space-between;
+    background:linear-gradient(180deg,#c4ad7e,transparent);
+  }
+  .app-head h2{
+    font-family:'IM Fell English SC',serif;
+    font-size:18px;letter-spacing:.18em;
+    color:var(--encre);
+  }
+  .app-head .crest{
+    width:26px;height:26px;
+    color:var(--rouge-sceau);
+  }
+
+  /* corps écran */
+  .body{flex:1;overflow:hidden;padding:14px 16px}
+
+  /* barre de navigation bas */
+  .nav-bottom{
+    flex:0 0 56px;
+    display:flex;justify-content:space-around;align-items:center;
+    background:linear-gradient(0deg,#b89a6a,#c8ad7a);
+    border-top:2px solid #6a4a22;
+    box-shadow:inset 0 4px 8px #6a4a2255;
+  }
+  .nav-bottom .item{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+    color:var(--encre-clair);
+    font-family:'Cinzel';font-size:8px;letter-spacing:.18em;
+    text-transform:uppercase;
+  }
+  .nav-bottom .item.actif{color:var(--rouge-sceau)}
+  .nav-bottom .item svg{width:20px;height:20px}
+
+  /* ===================== ELEMENTS COMMUNS ===================== */
+
+  .ornement-trait{
+    display:flex;align-items:center;gap:8px;
+    color:var(--encre-clair);
+    font-family:'Cinzel';
+    font-size:9px;letter-spacing:.28em;
+    text-transform:uppercase;
+    margin:8px 0;
+  }
+  .ornement-trait::before,
+  .ornement-trait::after{
+    content:"";flex:1;height:1px;
+    background:linear-gradient(90deg,transparent,#6a4a22,transparent);
+  }
+
+  .tampon{
+    position:absolute;
+    font-family:'IM Fell English SC',serif;
+    color:var(--rouge-sceau);
+    border:3px double var(--rouge-sceau);
+    padding:4px 10px;
+    letter-spacing:.18em;
+    font-size:11px;
+    transform:rotate(-12deg);
+    text-transform:uppercase;
+    background:#d9c39a40;
+    opacity:.85;
+    box-shadow:inset 0 0 4px #6e1e1e44;
+  }
+  .tampon.classifie{color:#222;border-color:#222}
+  .tampon.confidentiel{color:var(--encre);border-color:var(--encre);transform:rotate(8deg)}
+
+  .sceau{
+    width:34px;height:34px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#9a3030,#6e1e1e 55%,#3a0a0a 100%);
+    display:flex;align-items:center;justify-content:center;
+    color:#f0d9a8;font-family:'IM Fell English SC';font-size:14px;
+    box-shadow:0 2px 6px #0008,inset 0 -2px 4px #00000066,inset 0 2px 4px #ffffff22;
+    border:1px solid #2a0808;
+    flex:0 0 34px;
+  }
+
+  .bouton-laiton{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:linear-gradient(180deg,#d9a754,#a07028 55%,#7a5520);
+    color:#1a0f08;
+    border:1px solid #4a3010;
+    padding:10px 16px;
+    font-family:'Cinzel',serif;font-weight:700;
+    letter-spacing:.22em;
+    font-size:11px;text-transform:uppercase;
+    box-shadow:
+      inset 0 1px 0 #ffd98a,
+      inset 0 -2px 4px #4a301088,
+      0 2px 4px #0008;
+    cursor:pointer;
+  }
+
+  /* ===================== ECRAN 1 — IDENTIFICATION ===================== */
+
+  .ec-id .body{
+    display:flex;flex-direction:column;align-items:center;
+    text-align:center;gap:14px;padding-top:18px;
+  }
+  .ec-id .titre-grand{
+    font-family:'IM Fell English SC',serif;
+    font-size:22px;letter-spacing:.16em;
+    color:var(--encre);
+    line-height:1.1;
+  }
+  .ec-id .soustitre{
+    font-family:'Cinzel';font-size:9px;letter-spacing:.32em;
+    color:var(--rouge-sceau);text-transform:uppercase;
+  }
+  .ec-id .oeil{
+    width:140px;height:140px;margin:6px auto 4px;
+    color:var(--encre);
+  }
+  .ec-id .oeil svg{width:100%;height:100%;filter:drop-shadow(0 2px 4px #0006)}
+  .ec-id .champ{
+    width:100%;
+    background:#e9d6ad;
+    border:1px solid #6a4a22;
+    border-bottom:2px solid #4a3010;
+    padding:10px 12px;
+    font-family:'Special Elite';
+    color:var(--encre);
+    font-size:13px;
+    box-shadow:inset 0 1px 2px #6a4a2244;
+  }
+  .ec-id .label{
+    font-family:'Cinzel';font-size:9px;letter-spacing:.28em;
+    color:var(--encre-clair);text-transform:uppercase;
+    align-self:flex-start;margin-bottom:-8px;margin-top:4px;
+  }
+  .ec-id .bouton-laiton{margin-top:14px;width:100%;padding:14px}
+  .ec-id .footer-id{
+    font-family:'Cinzel';font-size:8px;letter-spacing:.24em;
+    color:var(--encre-clair);
+    margin-top:10px;text-transform:uppercase;
+  }
+
+  /* ===================== ECRAN 2 — DOSSIER ===================== */
+
+  .ec-dossier .body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+  .ec-dossier .salutation{
+    font-family:'IM Fell English SC';font-size:15px;
+    color:var(--encre);letter-spacing:.08em;
+  }
+  .ec-dossier .salutation small{
+    display:block;font-family:'Cinzel';font-size:8px;
+    color:var(--rouge-sceau);letter-spacing:.3em;margin-top:2px;
+  }
+  .ec-dossier .carte{
+    background:linear-gradient(180deg,#e6d2a3,#d0b787);
+    border:1px solid #6a4a22;
+    border-left:4px double var(--rouge-sceau);
+    padding:10px 12px;
+    display:flex;align-items:center;gap:12px;
+    box-shadow:0 2px 4px #0003,inset 0 1px 0 #fff5;
+    position:relative;
+  }
+  .ec-dossier .carte .ic{
+    width:36px;height:36px;flex:0 0 36px;
+    color:var(--encre);
+    background:#c4ad7e;
+    border:1px solid #6a4a22;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .ec-dossier .carte .ic svg{width:22px;height:22px}
+  .ec-dossier .carte h3{
+    font-family:'IM Fell English SC';font-size:14px;
+    color:var(--encre);letter-spacing:.1em;
+  }
+  .ec-dossier .carte p{
+    font-family:'Special Elite';font-size:10px;
+    color:var(--encre-clair);margin-top:1px;
+  }
+  .ec-dossier .carte .badge{
+    margin-left:auto;
+    background:var(--rouge-sceau);color:#f0d9a8;
+    font-family:'Cinzel';font-size:9px;
+    border-radius:50%;width:20px;height:20px;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* ===================== ECRAN 3 — DEPECHES ===================== */
+
+  .ec-depeches .body{padding:8px 10px;overflow:hidden}
+  .ec-depeches .recherche{
+    background:#e9d6ad;border:1px solid #6a4a22;
+    padding:6px 10px;
+    display:flex;align-items:center;gap:6px;
+    font-size:10px;color:var(--encre-clair);
+    margin-bottom:8px;
+  }
+  .ec-depeches .telegram{
+    background:#e6d2a3;
+    border:1px solid #6a4a22;
+    padding:8px 10px;margin-bottom:8px;
+    position:relative;
+    box-shadow:0 1px 0 #6a4a2244,2px 2px 0 #6a4a2222;
+  }
+  .ec-depeches .telegram .head{
+    display:flex;align-items:center;gap:8px;
+    border-bottom:1px dashed #6a4a22;
+    padding-bottom:4px;margin-bottom:4px;
+  }
+  .ec-depeches .telegram .nom{
+    font-family:'IM Fell English SC';font-size:12px;
+    color:var(--encre);letter-spacing:.1em;flex:1;
+  }
+  .ec-depeches .telegram .heure{
+    font-family:'Cinzel';font-size:8px;
+    color:var(--encre-clair);letter-spacing:.18em;
+  }
+  .ec-depeches .telegram .corps{
+    font-size:11px;color:var(--encre-clair);line-height:1.35;
+  }
+  .ec-depeches .telegram.urgent::before{
+    content:"URGENT";
+    position:absolute;top:-6px;right:8px;
+    background:var(--rouge-sceau);color:#f0d9a8;
+    font-family:'Cinzel';font-size:8px;letter-spacing:.24em;
+    padding:2px 6px;
+    transform:rotate(2deg);
+    box-shadow:0 1px 2px #0006;
+  }
+  .ec-depeches .telegram.nonlu{border-left:4px double var(--rouge-sceau)}
+  .ec-depeches .telegram.nonlu .nom::after{
+    content:"●";color:var(--rouge-sceau);margin-left:6px;
+  }
+
+  /* ===================== ECRAN 4 — CONVERSATION ===================== */
+
+  .ec-conv .app-head .retour{
+    color:var(--encre);font-size:18px;
+    font-family:'IM Fell English SC';
+  }
+  .ec-conv .app-head .info{flex:1;text-align:center}
+  .ec-conv .app-head .info h2{font-size:14px}
+  .ec-conv .app-head .info small{
+    font-family:'Cinzel';font-size:8px;letter-spacing:.24em;
+    color:var(--vert-occulte);
+  }
+  .ec-conv .body{padding:10px 12px;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+  .ec-conv .bulle{
+    max-width:78%;
+    padding:8px 12px;
+    font-size:11px;line-height:1.4;
+    color:var(--encre);
+    position:relative;
+    background:#e9d6ad;
+    box-shadow:0 1px 2px #0003;
+  }
+  /* effet papier déchiré */
+  .ec-conv .bulle::before{
+    content:"";position:absolute;left:0;right:0;top:-3px;height:5px;
+    background:
+      linear-gradient(135deg,transparent 33%,#e9d6ad 33%) -2px 0/8px 5px,
+      linear-gradient(225deg,transparent 33%,#e9d6ad 33%) 2px 0/8px 5px;
+  }
+  .ec-conv .bulle::after{
+    content:"";position:absolute;left:0;right:0;bottom:-3px;height:5px;
+    background:
+      linear-gradient(45deg,transparent 33%,#e9d6ad 33%) -2px 0/8px 5px,
+      linear-gradient(-45deg,transparent 33%,#e9d6ad 33%) 2px 0/8px 5px;
+  }
+  .ec-conv .bulle.moi{
+    background:#c4ad7e;align-self:flex-end;
+  }
+  .ec-conv .bulle.moi::before{
+    background:
+      linear-gradient(135deg,transparent 33%,#c4ad7e 33%) -2px 0/8px 5px,
+      linear-gradient(225deg,transparent 33%,#c4ad7e 33%) 2px 0/8px 5px;
+  }
+  .ec-conv .bulle.moi::after{
+    background:
+      linear-gradient(45deg,transparent 33%,#c4ad7e 33%) -2px 0/8px 5px,
+      linear-gradient(-45deg,transparent 33%,#c4ad7e 33%) 2px 0/8px 5px;
+  }
+  .ec-conv .bulle .heure{
+    display:block;text-align:right;
+    font-family:'Cinzel';font-size:7px;letter-spacing:.2em;
+    color:var(--encre-clair);margin-top:3px;
+  }
+
+  .ec-conv .bulle.vocale{
+    display:flex;align-items:center;gap:8px;min-width:60%;
+  }
+  .ec-conv .bulle.vocale .play{
+    width:24px;height:24px;border-radius:50%;
+    background:var(--rouge-sceau);color:#f0d9a8;
+    display:flex;align-items:center;justify-content:center;
+    flex:0 0 24px;font-size:10px;
+  }
+  .ec-conv .waveform{
+    flex:1;height:24px;display:flex;align-items:center;gap:1.5px;
+  }
+  .ec-conv .waveform i{
+    flex:1;background:var(--encre-clair);
+    border-radius:1px;
+  }
+  .ec-conv .bulle.image{padding:4px;background:#c4ad7e}
+  .ec-conv .bulle.image .photo{
+    width:100%;height:120px;
+    background:
+      linear-gradient(135deg,#3a2a1c 0%,#6a4a22 60%,#a07028 100%);
+    position:relative;overflow:hidden;
+    border:1px solid #4a3010;
+  }
+  .ec-conv .bulle.image .photo::after{
+    content:"PLAQUE PHOTOGRAPHIQUE N°7";
+    position:absolute;bottom:4px;left:4px;
+    font-family:'Cinzel';font-size:7px;letter-spacing:.18em;
+    color:#d9c39a;
+  }
+
+  .ec-conv .saisie{
+    flex:0 0 50px;
+    background:linear-gradient(0deg,#b89a6a,#c8ad7a);
+    border-top:2px solid #6a4a22;
+    display:flex;align-items:center;gap:6px;padding:0 10px;
+  }
+  .ec-conv .saisie .input{
+    flex:1;background:#e9d6ad;border:1px solid #6a4a22;
+    padding:8px 10px;font-size:11px;color:var(--encre-clair);
+    font-style:italic;
+    box-shadow:inset 0 1px 2px #6a4a2244;
+  }
+  .ec-conv .saisie .btn-rond{
+    width:38px;height:38px;border-radius:50%;
+    background:linear-gradient(180deg,#d9a754,#7a5520);
+    border:1px solid #4a3010;color:#1a0f08;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:inset 0 1px 0 #ffd98a,0 1px 2px #0006;
+  }
+  .ec-conv .saisie .btn-rond svg{width:18px;height:18px}
+
+  /* ===================== ECRAN 5 — CYLINDRES ===================== */
+
+  .ec-cyl .body{padding:8px 12px;overflow:hidden;display:flex;flex-direction:column}
+  .ec-cyl .liste{flex:1;overflow:hidden}
+  .ec-cyl .cylindre{
+    display:flex;align-items:center;gap:10px;
+    padding:8px 4px;
+    border-bottom:1px dashed #6a4a2266;
+  }
+  .ec-cyl .tube{
+    width:42px;height:42px;flex:0 0 42px;
+    border-radius:50%;
+    background:
+      repeating-linear-gradient(0deg,#3a2a1c 0,#3a2a1c 2px,#5a3f1f 2px,#5a3f1f 4px);
+    border:2px solid #1a0f08;
+    box-shadow:inset 0 0 6px #000,0 1px 2px #0006;
+    position:relative;
+  }
+  .ec-cyl .tube::after{
+    content:"";position:absolute;inset:8px;border-radius:50%;
+    background:radial-gradient(circle,#1a0f08,#3a2a1c);
+    border:1px solid #1a0f08;
+  }
+  .ec-cyl .info{flex:1;min-width:0}
+  .ec-cyl .info .nom{
+    font-family:'IM Fell English SC';font-size:12px;
+    color:var(--encre);letter-spacing:.08em;
+  }
+  .ec-cyl .info .meta{
+    font-family:'Cinzel';font-size:8px;letter-spacing:.18em;
+    color:var(--encre-clair);text-transform:uppercase;
+    margin-top:1px;
+  }
+  .ec-cyl .mini-wave{
+    flex:1;height:16px;display:flex;align-items:center;gap:1px;
+  }
+  .ec-cyl .mini-wave i{flex:1;background:var(--encre-clair)}
+  .ec-cyl .duree{
+    font-family:'Cinzel';font-size:9px;color:var(--rouge-sceau);
+    letter-spacing:.18em;
+  }
+
+  .ec-cyl .gramophone{
+    flex:0 0 auto;text-align:center;padding:14px 0 6px;
+    border-top:1px double #6a4a22;margin-top:8px;
+  }
+  .ec-cyl .gramophone .corn{
+    width:90px;height:90px;margin:0 auto;
+    color:var(--laiton);
+    filter:drop-shadow(0 4px 6px #0008);
+  }
+  .ec-cyl .gramophone .label{
+    font-family:'Cinzel';font-size:9px;letter-spacing:.28em;
+    color:var(--rouge-sceau);text-transform:uppercase;margin-top:4px;
+  }
+
+  /* ===================== ECRAN 6 — EMETTEUR SANS-FIL ===================== */
+
+  .ec-talkie .body{padding:0;display:flex;flex-direction:column;overflow:hidden}
+
+  .ec-talkie .alerte-bip{
+    background:linear-gradient(90deg,#6e1e1e,#a32a2a,#6e1e1e);
+    color:#f0d9a8;
+    padding:6px 12px;text-align:center;
+    font-family:'Cinzel';font-size:10px;letter-spacing:.32em;
+    text-transform:uppercase;
+    border-bottom:1px solid #2a0808;
+    animation:pulse-bandeau 1.4s ease-in-out infinite;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+  }
+  @keyframes pulse-bandeau{
+    0%,100%{box-shadow:inset 0 0 18px #0008}
+    50%{box-shadow:inset 0 0 32px #fff3,0 0 18px #a32a2a88}
+  }
+  .ec-talkie .alerte-bip::before,
+  .ec-talkie .alerte-bip::after{
+    content:"●";color:#f0d9a8;animation:blink-dot 1s steps(2) infinite;
+  }
+  @keyframes blink-dot{50%{opacity:0}}
+
+  .ec-talkie .agents{padding:8px 14px;flex:1;overflow:hidden}
+  .ec-talkie .agents .titre{
+    font-family:'Cinzel';font-size:9px;letter-spacing:.28em;
+    color:var(--encre-clair);text-transform:uppercase;margin-bottom:6px;
+  }
+  .ec-talkie .agent-row{
+    display:flex;align-items:center;gap:8px;padding:5px 0;
+    border-bottom:1px dashed #6a4a2266;
+    font-size:11px;
+  }
+  .ec-talkie .voyant{
+    width:10px;height:10px;border-radius:50%;
+    border:1px solid #1a0f08;flex:0 0 10px;
+    box-shadow:inset 0 -1px 1px #0006;
+  }
+  .ec-talkie .voyant.on{
+    background:radial-gradient(circle at 30% 30%,#9eda7a,#4a6a3e);
+    box-shadow:0 0 6px #6e9050,inset 0 -1px 1px #0006;
+  }
+  .ec-talkie .voyant.off{
+    background:radial-gradient(circle at 30% 30%,#6a3030,#3a1010);
+  }
+  .ec-talkie .agent-row .nom{
+    font-family:'IM Fell English SC';font-size:12px;color:var(--encre);
+    flex:1;letter-spacing:.06em;
+  }
+  .ec-talkie .agent-row .stat{
+    font-family:'Cinzel';font-size:8px;letter-spacing:.2em;
+    color:var(--encre-clair);text-transform:uppercase;
+  }
+  .ec-talkie .agent-row .stat.actif{color:var(--vert-occulte)}
+
+  .ec-talkie .ptt-zone{
+    flex:0 0 auto;padding:10px 14px 14px;
+    background:linear-gradient(0deg,#3a2a1c,#5a3f1f);
+    border-top:2px solid #1a0f08;
+    text-align:center;
+  }
+  .ec-talkie .ptt{
+    width:120px;height:120px;margin:0 auto;
+    border-radius:50%;
+    background:
+      radial-gradient(circle at 35% 30%,#d9a754 0%,#a07028 30%,#5a3f1f 70%,#2a1f17 100%);
+    border:4px solid #1a0f08;
+    box-shadow:
+      0 0 0 6px #5a3f1f,
+      inset 0 6px 14px #ffd98a44,
+      inset 0 -8px 16px #00000088,
+      0 6px 16px #000a;
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+  }
+  /* rivets */
+  .ec-talkie .ptt::before{
+    content:"";position:absolute;inset:8px;border-radius:50%;
+    background:
+      radial-gradient(circle at 50% 8%,#1a0f08 2px,transparent 2.5px),
+      radial-gradient(circle at 92% 50%,#1a0f08 2px,transparent 2.5px),
+      radial-gradient(circle at 50% 92%,#1a0f08 2px,transparent 2.5px),
+      radial-gradient(circle at 8% 50%,#1a0f08 2px,transparent 2.5px);
+  }
+  .ec-talkie .ptt span{
+    font-family:'IM Fell English SC';font-size:18px;
+    color:#f0d9a8;text-shadow:0 1px 2px #000a,0 0 8px #ffd98a44;
+    letter-spacing:.18em;z-index:2;
+  }
+  .ec-talkie .ptt-label{
+    font-family:'Cinzel';font-size:9px;letter-spacing:.32em;
+    color:var(--papier-fonce);text-transform:uppercase;margin-top:8px;
+  }
+
+  /* ===================== ECRAN 7 — TRANSMISSION URGENTE ===================== */
+
+  .ec-urgent .screen{
+    background:radial-gradient(ellipse at center,#3a0a0a 0%,#1a0404 70%,#0a0202 100%);
+    color:#f0d9a8;
+  }
+  .ec-urgent .screen::before{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0.25 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+    mix-blend-mode:overlay;
+  }
+  .ec-urgent .statusbar{color:#f0d9a8aa}
+  .ec-urgent .body{
+    padding:0;flex:1;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:18px;text-align:center;position:relative;
+  }
+  .ec-urgent .halo{
+    position:absolute;width:280px;height:280px;border-radius:50%;
+    background:radial-gradient(circle,#a32a2a44 0%,#6e1e1e22 40%,transparent 70%);
+    animation:halo-pulse 1.8s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes halo-pulse{
+    0%,100%{transform:scale(1);opacity:.5}
+    50%{transform:scale(1.25);opacity:1}
+  }
+  .ec-urgent .halo.h2{animation-delay:.6s;width:340px;height:340px}
+  .ec-urgent .halo.h3{animation-delay:1.2s;width:400px;height:400px}
+
+  .ec-urgent .badge-urgent{
+    font-family:'Cinzel';font-size:10px;letter-spacing:.4em;
+    color:#f0d9a8;text-transform:uppercase;
+    border:1px solid #f0d9a866;
+    padding:4px 14px;z-index:2;
+    background:#6e1e1e88;
+    animation:blink-bord 1s steps(2) infinite;
+  }
+  @keyframes blink-bord{50%{border-color:#a32a2a;color:#fff}}
+
+  .ec-urgent .grand-sceau{
+    width:160px;height:160px;border-radius:50%;
+    background:
+      radial-gradient(circle at 35% 30%,#c44040,#8e2a2a 50%,#3a0a0a 100%);
+    border:3px double #f0d9a866;
+    display:flex;align-items:center;justify-content:center;
+    color:#f0d9a8;
+    box-shadow:
+      0 0 30px #a32a2a99,
+      inset 0 -10px 20px #00000088,
+      inset 0 4px 10px #ffd98a33;
+    z-index:2;position:relative;
+    animation:sceau-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes sceau-pulse{
+    0%,100%{box-shadow:0 0 30px #a32a2a99,inset 0 -10px 20px #00000088,inset 0 4px 10px #ffd98a33}
+    50%{box-shadow:0 0 60px #ff5050cc,inset 0 -10px 20px #00000088,inset 0 4px 10px #ffd98a55}
+  }
+  .ec-urgent .grand-sceau svg{width:80%;height:80%}
+
+  .ec-urgent .nom-agent{
+    font-family:'IM Fell English SC';font-size:22px;
+    letter-spacing:.14em;z-index:2;
+    text-shadow:0 2px 6px #000;
+  }
+  .ec-urgent .message{
+    font-size:12px;color:#e9d6ad;z-index:2;max-width:80%;
+    font-style:italic;
+  }
+  .ec-urgent .vibration{
+    font-family:'Cinzel';font-size:9px;letter-spacing:.32em;
+    color:#a32a2a;text-transform:uppercase;
+    z-index:2;
+    display:flex;align-items:center;gap:8px;
+  }
+  .ec-urgent .vibration::before,
+  .ec-urgent .vibration::after{
+    content:"〰";font-size:14px;
+    animation:wave 0.6s ease-in-out infinite;
+  }
+  .ec-urgent .vibration::after{animation-delay:.3s}
+  @keyframes wave{
+    0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}
+  }
+
+  .ec-urgent .actions{
+    display:flex;gap:14px;z-index:2;margin-top:6px;
+  }
+  .ec-urgent .btn-grd{
+    width:64px;height:64px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 10px #000a,inset 0 2px 4px #ffffff33,inset 0 -4px 8px #00000066;
+    border:2px solid #1a0f08;
+    cursor:pointer;
+  }
+  .ec-urgent .btn-grd.repondre{
+    background:radial-gradient(circle at 35% 30%,#9eda7a,#4a6a3e 60%,#2a3a1f);
+    color:#1a0f08;
+  }
+  .ec-urgent .btn-grd.differer{
+    background:radial-gradient(circle at 35% 30%,#6a6a6a,#3a3a3a 60%,#1a1a1a);
+    color:#d9c39a;
+  }
+  .ec-urgent .btn-grd svg{width:30px;height:30px}
+  .ec-urgent .btn-label{
+    font-family:'Cinzel';font-size:8px;letter-spacing:.28em;
+    color:#f0d9a8aa;text-transform:uppercase;margin-top:4px;
+    text-align:center;
+  }
+  .ec-urgent .action-bloc{display:flex;flex-direction:column;align-items:center}
+
+  /* ===================== ECRAN 8 — REGISTRE ===================== */
+
+  .ec-reg .body{padding:8px 12px;overflow:hidden}
+  .ec-reg .recherche{
+    background:#e9d6ad;border:1px solid #6a4a22;
+    padding:6px 10px;display:flex;align-items:center;gap:6px;
+    font-size:10px;color:var(--encre-clair);margin-bottom:8px;
+  }
+  .ec-reg .fiche{
+    display:flex;gap:10px;
+    background:#e6d2a3;border:1px solid #6a4a22;
+    padding:8px;margin-bottom:8px;
+    box-shadow:2px 2px 0 #6a4a2233;
+    position:relative;
+  }
+  .ec-reg .portrait{
+    width:54px;height:64px;flex:0 0 54px;
+    background:
+      radial-gradient(ellipse at 50% 35%,#d9a754 0%,#7a5520 60%,#3a2a1c 100%);
+    border:1px solid #1a0f08;
+    display:flex;align-items:center;justify-content:center;
+    color:#1a0f08;
+    font-family:'IM Fell English SC';font-size:22px;
+    letter-spacing:.04em;
+    box-shadow:inset 0 0 12px #00000099,inset 0 0 0 2px #d9c39a44;
+    position:relative;
+  }
+  .ec-reg .portrait::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,transparent 60%,#0006 100%);
+  }
+  .ec-reg .portrait .ini{position:relative;z-index:2;text-shadow:0 1px 2px #000}
+  .ec-reg .infos{flex:1;min-width:0}
+  .ec-reg .infos h4{
+    font-family:'IM Fell English SC';font-size:13px;
+    color:var(--encre);letter-spacing:.08em;
+  }
+  .ec-reg .infos .role{
+    font-family:'Cinzel';font-size:8px;letter-spacing:.22em;
+    color:var(--rouge-sceau);text-transform:uppercase;margin-top:1px;
+  }
+  .ec-reg .infos .ligne{
+    display:flex;justify-content:space-between;
+    font-size:9px;color:var(--encre-clair);
+    margin-top:6px;border-top:1px dashed #6a4a2266;padding-top:4px;
+    font-family:'Cinzel';letter-spacing:.14em;text-transform:uppercase;
+  }
+  .ec-reg .infos .ligne .v{color:var(--vert-occulte)}
+  .ec-reg .infos .ligne .r{color:var(--rouge-sceau)}
+
+  .ec-reg .fiche .matricule{
+    position:absolute;top:6px;right:8px;
+    font-family:'Cinzel';font-size:8px;letter-spacing:.18em;
+    color:var(--encre-clair);
+    border:1px solid #6a4a2266;padding:1px 4px;
+  }
+
+  /* ===================== PIED DE PAGE ===================== */
+
+  .pied{
+    position:relative;z-index:2;
+    text-align:center;padding:40px 24px 60px;
+    color:var(--papier-fonce);
+    font-family:'Cinzel';font-size:10px;letter-spacing:.32em;
+    text-transform:uppercase;
+    border-top:1px double #5a3f1f;
+    margin-top:40px;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- =================== EN-TETE =================== -->
+
+<header class="page-head">
+
+  <!-- engrenages décoratifs -->
+  <svg class="gear-deco left" viewBox="0 0 100 100" aria-hidden="true">
+    <g fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="50" cy="50" r="42"/>
+      <circle cx="50" cy="50" r="20"/>
+      <circle cx="50" cy="50" r="8"/>
+      <g stroke-width="6">
+        <line x1="50" y1="2" x2="50" y2="14"/>
+        <line x1="50" y1="86" x2="50" y2="98"/>
+        <line x1="2" y1="50" x2="14" y2="50"/>
+        <line x1="86" y1="50" x2="98" y2="50"/>
+        <line x1="16" y1="16" x2="24" y2="24"/>
+        <line x1="76" y1="76" x2="84" y2="84"/>
+        <line x1="84" y1="16" x2="76" y2="24"/>
+        <line x1="24" y1="76" x2="16" y2="84"/>
+      </g>
+    </g>
+  </svg>
+  <svg class="gear-deco right" viewBox="0 0 100 100" aria-hidden="true">
+    <g fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="50" cy="50" r="42"/>
+      <circle cx="50" cy="50" r="20"/>
+      <circle cx="50" cy="50" r="8"/>
+      <g stroke-width="6">
+        <line x1="50" y1="2" x2="50" y2="14"/>
+        <line x1="50" y1="86" x2="50" y2="98"/>
+        <line x1="2" y1="50" x2="14" y2="50"/>
+        <line x1="86" y1="50" x2="98" y2="50"/>
+        <line x1="16" y1="16" x2="24" y2="24"/>
+        <line x1="76" y1="76" x2="84" y2="84"/>
+        <line x1="84" y1="16" x2="76" y2="24"/>
+        <line x1="24" y1="76" x2="16" y2="84"/>
+      </g>
+    </g>
+  </svg>
+
+  <h1>Mysteria Communicator</h1>
+  <div class="sub">Agence des Affaires Extraordinaires — Maquettes Visuelles</div>
+  <div class="ornement">⚜ DOSSIER N°VII — TRANSMISSIONS CONFIDENTIELLES ⚜</div>
+</header>
+
+<!-- ============== DEFINITIONS SVG REUTILISABLES ============== -->
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="ic-signal" viewBox="0 0 24 24"><g fill="currentColor">
+      <rect x="2" y="14" width="3" height="6"/><rect x="7" y="10" width="3" height="10"/>
+      <rect x="12" y="6" width="3" height="14"/><rect x="17" y="2" width="3" height="18"/>
+    </g></symbol>
+    <symbol id="ic-batt" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="2" y="7" width="18" height="10" rx="1"/><rect x="20.5" y="10" width="2" height="4" fill="currentColor"/>
+      <rect x="4" y="9" width="12" height="6" fill="currentColor"/>
+    </g></symbol>
+    <symbol id="ic-mic" viewBox="0 0 24 24"><g fill="currentColor">
+      <rect x="9" y="3" width="6" height="12" rx="3"/>
+      <path d="M5 12a7 7 0 0 0 14 0M12 19v3M8 22h8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    </g></symbol>
+    <symbol id="ic-cam" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="2" y="6" width="20" height="14" rx="1"/><circle cx="12" cy="13" r="4"/>
+      <rect x="8" y="3" width="8" height="3"/>
+    </g></symbol>
+    <symbol id="ic-env" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8">
+      <rect x="2" y="5" width="20" height="14"/><polyline points="2,5 12,14 22,5"/>
+    </g></symbol>
+    <symbol id="ic-radio" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="9" width="18" height="12" rx="1"/>
+      <circle cx="16" cy="15" r="3"/><circle cx="8" cy="13" r=".8" fill="currentColor"/>
+      <circle cx="8" cy="17" r=".8" fill="currentColor"/>
+      <line x1="6" y1="9" x2="14" y2="3"/>
+    </g></symbol>
+    <symbol id="ic-users" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6">
+      <circle cx="9" cy="9" r="3.5"/><path d="M3 20c0-3.5 3-6 6-6s6 2.5 6 6"/>
+      <circle cx="17" cy="8" r="2.5"/><path d="M15 14.5c2.5 0 6 1.5 6 5"/>
+    </g></symbol>
+    <symbol id="ic-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6">
+      <circle cx="11" cy="11" r="6"/><line x1="15.5" y1="15.5" x2="21" y2="21"/>
+    </g></symbol>
+    <symbol id="ic-attach" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M21 11l-9 9a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5L10 18a2 2 0 0 1-3-3l8-8"/>
+    </g></symbol>
+    <symbol id="ic-send" viewBox="0 0 24 24"><g fill="currentColor">
+      <path d="M3 3l18 9-18 9 4-9z"/>
+    </g></symbol>
+    <symbol id="ic-phone" viewBox="0 0 24 24"><g fill="currentColor">
+      <path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/>
+    </g></symbol>
+    <symbol id="ic-pause" viewBox="0 0 24 24"><g fill="currentColor">
+      <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+    </g></symbol>
+    <symbol id="ic-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6">
+      <circle cx="12" cy="12" r="9"/><polyline points="12,6 12,12 16,14"/>
+    </g></symbol>
+    <symbol id="ic-home" viewBox="0 0 24 24"><g fill="currentColor">
+      <path d="M12 3l9 8h-2v9h-5v-6H10v6H5v-9H3z"/>
+    </g></symbol>
+  </defs>
+</svg>
+
+<!-- ====================== GRILLE ECRANS ====================== -->
+
+<main class="grille">
+
+  <!-- ============ 1. IDENTIFICATION ============ -->
+  <div class="ecran-bloc">
+    <div class="ecran-titre"><span class="ecran-num">N°I</span>IDENTIFICATION</div>
+    <div class="phone">
+      <div class="screen ec-id">
+        <div class="screen-inner">
+          <div class="statusbar">
+            <span>03h47</span>
+            <div class="tres">
+              <svg><use href="#ic-signal"/></svg>
+              <svg><use href="#ic-batt"/></svg>
+            </div>
+          </div>
+          <div class="body">
+            <div class="oeil">
+              <!-- oeil dans triangle -->
+              <svg viewBox="0 0 140 140">
+                <defs>
+                  <radialGradient id="iris" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#6e1e1e"/>
+                    <stop offset="60%" stop-color="#3a2a1c"/>
+                    <stop offset="100%" stop-color="#1a0f08"/>
+                  </radialGradient>
+                </defs>
+                <polygon points="70,12 130,124 10,124" fill="none" stroke="#1a0f08" stroke-width="2.5"/>
+                <polygon points="70,22 122,118 18,118" fill="none" stroke="#1a0f08" stroke-width="1" stroke-dasharray="3 3"/>
+                <!-- oeil -->
+                <path d="M30 80 Q70 50 110 80 Q70 110 30 80 Z" fill="#d9c39a" stroke="#1a0f08" stroke-width="1.8"/>
+                <circle cx="70" cy="80" r="14" fill="url(#iris)"/>
+                <circle cx="70" cy="80" r="5" fill="#1a0f08"/>
+                <circle cx="74" cy="76" r="2" fill="#d9c39a"/>
+                <!-- rayons -->
+                <g stroke="#1a0f08" stroke-width="1" opacity=".6">
+                  <line x1="70" y1="36" x2="70" y2="44"/>
+                  <line x1="70" y1="116" x2="70" y2="124"/>
+                  <line x1="22" y1="80" x2="30" y2="80"/>
+                  <line x1="110" y1="80" x2="118" y2="80"/>
+                </g>
+              </svg>
+            </div>
+            <div class="titre-grand">MYSTERIA<br>COMMUNICATOR</div>
+            <div class="soustitre">★ Agence des Affaires Extraordinaires ★</div>
+
+            <div class="ornement-trait">⚜ Identification ⚜</div>
+
+            <div class="label">Nom de code</div>
+            <input class="champ" value="Mlle Eglantine" readonly>
+            <div class="label">Sceau d'agent</div>
+            <input class="champ" type="password" value="●●●●●●●●●●" readonly>
+
+            <button class="bouton-laiton">Prendre ses fonctions</button>
+
+            <div class="footer-id">— Sub Rosa, Veritas —</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 2. DOSSIER ============ -->
+  <div class="ecran-bloc">
+    <div class="ecran-titre"><span class="ecran-num">N°II</span>Dossier de l'Agent</div>
+    <div class="phone">
+      <div class="screen ec-dossier">
+        <div class="screen-inner">
+          <div class="statusbar">
+            <span>09h12</span>
+            <div class="tres">
+              <svg><use href="#ic-signal"/></svg>
+              <svg><use href="#ic-batt"/></svg>
+            </div>
+          </div>
+          <div class="app-head">
+            <h2>Dossier</h2>
+            <svg class="crest" viewBox="0 0 24 24"><polygon points="12,2 22,20 2,20" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="14" r="3" fill="currentColor"/></svg>
+          </div>
+          <div class="body">
+            <div class="salutation">
+              Bonsoir, Mlle Eglantine
+              <small>★ Affectation : Bureau VII ★</small>
+            </div>
+            <div class="ornement-trait">⚜ Services Disponibles ⚜</div>
+
+            <div class="carte">
+              <div class="ic"><svg><use href="#ic-env"/></svg></div>
+              <div>
+                <h3>Dépêches</h3>
+                <p>Correspondance écrite chiffrée</p>
+              </div>
+              <div class="badge">3</div>
+            </div>
+
+            <div class="carte">
+              <div class="ic"><svg><use href="#ic-mic"/></svg></div>
+              <div>
+                <h3>Cylindres</h3>
+                <p>Messages phonographiques</p>
+              </div>
+              <div class="badge">7</div>
+            </div>
+
+            <div class="carte">
+              <div class="ic"><svg><use href="#ic-radio"/></svg></div>
+              <div>
+                <h3>Émetteur Sans-Fil</h3>
+                <p>Communication directe — talkie</p>
+              </div>
+            </div>
+
+            <div class="carte">
+              <div class="ic"><svg><use href="#ic-cam"/></svg></div>
+              <div>
+                <h3>Plaques Photographiques</h3>
+                <p>Pièces visuelles à conviction</p>
+              </div>
+            </div>
+
+            <div class="carte">
+              <div class="ic"><svg><use href="#ic-users"/></svg></div>
+              <div>
+                <h3>Registre des Agents</h3>
+                <p>Annuaire confidentiel</p>
+              </div>
+            </div>
+          </div>
+          <div class="nav-bottom">
+            <div class="item actif"><svg><use href="#ic-home"/></svg>Dossier</div>
+            <div class="item"><svg><use href="#ic-env"/></svg>Dépêches</div>
+            <div class="item"><svg><use href="#ic-radio"/></svg>Émetteur</div>
+            <div class="item"><svg><use href="#ic-users"/></svg>Registre</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 3. DEPECHES ============ -->
+  <div class="ecran-bloc">
+    <div class="ecran-titre"><span class="ecran-num">N°III</span>Dépêches</div>
+    <div class="phone">
+      <div class="screen ec-depeches">
+        <div class="screen-inner">
+          <div class="statusbar">
+            <span>14h33</span>
+            <div class="tres">
+              <svg><use href="#ic-signal"/></svg>
+              <svg><use href="#ic-batt"/></svg>
+            </div>
+          </div>
+          <div class="app-head">
+            <h2>Dépêches</h2>
+            <svg class="crest" viewBox="0 0 24 24"><use href="#ic-env"/></svg>
+          </div>
+          <div class="body">
+            <div class="recherche">
+              <svg width="12" height="12" viewBox="0 0 24 24"><use href="#ic-search"/></svg>
+              <span>Rechercher dans les dépêches...</span>
+            </div>
+
+            <div class="telegram urgent nonlu">
+              <div class="head">
+                <div class="sceau">M</div>
+                <div class="nom">Mr. Corbeau</div>
+                <div class="heure">02h14</div>
+              </div>
+              <div class="corps">L'artefact a été déplacé. Rendez-vous au lieu convenu — apportez le sceau d'argent.</div>
+            </div>
+
+            <div class="telegram nonlu">
+              <div class="head">
+                <div class="sceau">D</div>
+                <div class="nom">Dr. Vesper</div>
+                <div class="heure">23h47</div>
+              </div>
+              <div class="corps">L'analyse du fragment révèle des inscriptions antérieures à l'âge de Bronze. Voir la planche en pièce jointe.</div>
+            </div>
+
+            <div class="telegram urgent">
+              <div class="head">
+                <div class="sceau">F</div>
+                <div class="nom">Mme Frostwell</div>
+                <div class="heure">19h02</div>
+              </div>
+              <div class="corps">Surveillance du Quai 13 — trois individus en imperméable noir, je les ai filés jusqu'à...</div>
+            </div>
+
+            <div class="telegram">
+              <div class="head">
+                <div class="sceau">A</div>
+                <div class="nom">Capt. Aldwin</div>
+                <div class="heure">Hier</div>
+              </div>
+              <div class="corps">Bien reçu. Le rapport complet vous sera transmis par cylindre ce soir, après l'opération.</div>
+            </div>
+
+            <div class="telegram">
+              <div class="head">
+                <div class="sceau">L</div>
+                <div class="nom">Mlle Lazare</div>
+                <div class="heure">Hier</div>
+              </div>
+              <div class="corps">Compte-rendu de la séance reçu. Trois entités identifiées sur la plaque n°4.</div>
+            </div>
+          </div>
+          <div class="nav-bottom">
+            <div class="item"><svg><use href="#ic-home"/></svg>Dossier</div>
+            <div class="item actif"><svg><use href="#ic-env"/></svg>Dépêches</div>
+            <div class="item"><svg><use href="#ic-radio"/></svg>Émetteur</div>
+            <div class="item"><svg><use href="#ic-users"/></svg>Registre</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 4. CONVERSATION ============ -->
+  <div class="ecran-bloc">
+    <div class="ecran-titre"><span class="ecran-num">N°IV</span>Conversation</div>
+    <div class="phone">
+      <div class="screen ec-conv">
+        <div class="screen-inner">
+          <div class="statusbar">
+            <span>15h08</span>
+            <div class="tres">
+              <svg><use href="#ic-signal"/></svg>
+              <svg><use href="#ic-batt"/></svg>
+            </div>
+          </div>
+          <div class="app-head">
+            <span class="retour">‹</span>
+            <div class="info">
+              <h2>Mr. Corbeau</h2>
+              <small>● En ligne — Bureau VII</small>
+            </div>
+            <svg class="crest" viewBox="0 0 24 24"><use href="#ic-phone"/></svg>
+          </div>
+          <div class="body">
+
+            <div class="ornement-trait">28 brumaire — après-midi</div>
+
+            <div class="bulle">
+              Eglantine, l'artefact est maintenant scellé dans le coffre n°IX. Avez-vous reçu mon télégramme ?
+              <span class="heure">14h12</span>
+            </div>
+
+            <div class="bulle moi">
+              Bien reçu. Le sceau d'argent est en ma possession.
+              <span class="heure">14h45</span>
+            </div>
+
+            <div class="bulle vocale">
+              <div class="play">▶</div>
+              <div class="waveform">
+                <i style="height:4px"></i><i style="height:9px"></i><i style="height:14px"></i><i style="height:7px"></i>
+                <i style="height:11px"></i><i style="height:18px"></i><i style="height:22px"></i><i style="height:13px"></i>
+                <i style="height:8px"></i><i style="height:15px"></i><i style="height:20px"></i><i style="height:10px"></i>
+                <i style="height:6px"></i><i style="height:12px"></i><i style="height:9px"></i><i style="height:5px"></i>
+              </div>
+              <span style="font-family:'Cinzel';font-size:8px;letter-spacing:.18em;color:var(--rouge-sceau)">0:14</span>
+            </div>
+
+            <div class="bulle moi image">
+              <div class="photo">
+                <svg viewBox="0 0 100 60" style="position:absolute;inset:10% 25% auto auto;width:50%;height:60%;color:#d9c39a99">
+                  <ellipse cx="50" cy="22" rx="14" ry="16" fill="currentColor" opacity=".55"/>
+                  <ellipse cx="50" cy="50" rx="22" ry="10" fill="currentColor" opacity=".45"/>
+                </svg>
+              </div>
+              <span class="heure" style="text-align:right;display:block;padding:2px 4px 0">15h02</span>
+            </div>
+
+            <div class="bulle">
+              Excellent. La photographie confirme nos soupçons.
+              <span class="heure">15h05</span>
+            </div>
+
+          </div>
+          <div class="saisie">
+            <button class="btn-rond" title="Joindre">
+              <svg><use href="#ic-attach"/></svg>
+            </button>
+            <div class="input">Rédigez votre dépêche...</div>
+            <button class="btn-rond" title="Envoyer">
+              <svg><use href="#ic-send"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 5. CYLINDRES ============ -->
+  <div class="ecran-bloc">
+    <div class="ecran-titre"><span class="ecran-num">N°V</span>Cylindres Phonographiques</div>
+    <div class="phone">
+      <div class="screen ec-cyl">
+        <div class="screen-inner">
+          <div class="statusbar">
+            <span>16h41</span>
+            <div class="tres">
+              <svg><use href="#ic-signal"/></svg>
+              <svg><use href="#ic-batt"/></svg>
+            </div>
+          </div>
+          <div class="app-head">
+            <h2>Cylindres</h2>
+            <svg class="crest" viewBox="0 0 24 24"><use href="#ic-mic"/></svg>
+          </div>
+          <div class="body">
+            <div class="liste">
+
+              <div class="cylindre">
+                <div class="tube"></div>
+                <div class="info">
+                  <div class="nom">Mr. Corbeau</div>
+                  <div class="meta">★ Reçu 14h12 — Cyl. N°1287</div>
+                </div>
+                <div class="mini-wave">
+                  <i style="height:4px"></i><i style="height:9px"></i><i style="height:13px"></i><i style="height:6px"></i>
+                  <i style="height:14px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:5px"></i>
+                  <i style="height:10px"></i><i style="height:15px"></i>
+                </div>
+                <span class="duree">0:24</span>
+              </div>
+
+              <div class="cylindre">
+                <div class="tube"></div>
+                <div class="info">
+                  <div class="nom">Dr. Vesper</div>
+                  <div class="meta">★ Reçu Hier — Cyl. N°1284</div>
+                </div>
+                <div class="mini-wave">
+                  <i style="height:8px"></i><i style="height:13px"></i><i style="height:5px"></i><i style="height:11px"></i>
+                  <i style="height:7px"></i><i style="height:14px"></i><i style="height:9px"></i><i style="height:4px"></i>
+                  <i style="height:12px"></i><i style="height:6px"></i>
+                </div>
+                <span class="duree">1:08</span>
+              </div>
+
+              <div class="cylindre">
+                <div class="tube"></div>
+                <div class="info">
+                  <div class="nom">Mme Frostwell</div>
+                  <div class="meta">★ Reçu Hier — Cyl. N°1281</div>
+                </div>
+                <div class="mini-wave">
+                  <i style="height:6px"></i><i style="height:10px"></i><i style="height:14px"></i><i style="height:8px"></i>
+                  <i style="height:5px"></i><i style="height:12px"></i><i style="height:15px"></i><i style="height:9px"></i>
+                  <i style="height:7px"></i><i style="height:11px"></i>
+                </div>
+                <span class="duree">0:42</span>
+              </div>
+
+              <div class="cylindre">
+                <div class="tube"></div>
+                <div class="info">
+                  <div class="nom">Capt. Aldwin</div>
+                  <div class="meta">★ 25 brumaire — Cyl. N°1278</div>
+                </div>
+                <div class="mini-wave">
+                  <i style="height:11px"></i><i style="height:6px"></i><i style="height:13px"></i><i style="height:7px"></i>
+                  <i style="height:9px"></i><i style="height:5px"></i><i style="height:14px"></i><i style="height:8px"></i>
+                  <i style="height:12px"></i><i style="height:4px"></i>
+                </div>
+                <span class="duree">2:17</span>
+              </div>
+            </div>
+
+            <div class="gramophone">
+              <svg class="corn" viewBox="0 0 100 100">
+                <!-- cornet de gramophone -->
+                <defs>
+                  <radialGradient id="laiton-grad" cx="40%" cy="40%" r="60%">
+                    <stop offset="0%" stop-color="#d9a754"/>
+                    <stop offset="60%" stop-color="#a07028"/>
+                    <stop offset="100%" stop-color="#5a3f1f"/>
+                  </radialGradient>
+                </defs>
+                <ellipse cx="50" cy="50" rx="44" ry="44" fill="url(#laiton-grad)" stroke="#1a0f08" stroke-width="2"/>
+                <ellipse cx="50" cy="50" rx="38" ry="38" fill="none" stroke="#1a0f0866" stroke-width="1"/>
+                <ellipse cx="50" cy="50" rx="20" ry="20" fill="#3a2a1c" stroke="#1a0f08" stroke-width="1.5"/>
+                <ellipse cx="50" cy="50" rx="14" ry="14" fill="#6e1e1e" stroke="#1a0f08" stroke-width="1"/>
+                <circle cx="50" cy="50" r="5" fill="#d9c39a"/>
+                <circle cx="50" cy="50" r="2" fill="#1a0f08"/>
+                <!-- reflets -->
+                <ellipse cx="38" cy="34" rx="12" ry="6" fill="#ffd98a55"/>
+              </svg>
+              <div class="label">★ Graver un cylindre ★</div>
+            </div>
+          </div>
+          <div class="nav-bottom">
+            <div class="item"><svg><use href="#ic-home"/></svg>Dossier</div>
+            <div class="item"><svg><use href="#ic-env"/></svg>Dépêches</div>
+            <div class="item actif"><svg><use href="#ic-mic"/></svg>Cylindres</div>
+            <div class="item"><svg><use href="#ic-users"/></svg>Registre</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 6. EMETTEUR SANS-FIL ============ -->
+  <div class="ecran-bloc">
+    <div class="ecran-titre"><span class="ecran-num">N°VI</span>Émetteur Sans-Fil</div>
+    <div class="phone">
+      <div class="screen ec-talkie">
+        <div class="screen-inner">
+          <div class="statusbar">
+            <span>21h17</span>
+            <div class="tres">
+              <svg><use href="#ic-signal"/></svg>
+              <svg><use href="#ic-batt"/></svg>
+            </div>
+          </div>
+          <div class="app-head">
+            <h2>Émetteur</h2>
+            <svg class="crest" viewBox="0 0 24 24"><use href="#ic-radio"/></svg>
+          </div>
+          <div class="body">
+
+            <div class="alerte-bip">Bip continu reçu</div>
+
+            <div class="agents">
+              <div class="titre">⚜ Fréquence — Bureau VII ⚜</div>
+
+              <div class="agent-row">
+                <span class="voyant on"></span>
+                <span class="nom">Mr. Corbeau</span>
+                <span class="stat actif">Sur fréquence</span>
+              </div>
+              <div class="agent-row">
+                <span class="voyant on"></span>
+                <span class="nom">Dr. Vesper</span>
+                <span class="stat actif">Sur fréquence</span>
+              </div>
+              <div class="agent-row">
+                <span class="voyant on"></span>
+                <span class="nom">Mme Frostwell</span>
+                <span class="stat actif">Sur fréquence</span>
+              </div>
+              <div class="agent-row">
+                <span class="voyant off"></span>
+                <span class="nom">Capt. Aldwin</span>
+                <span class="stat">Hors d'onde</span>
+              </div>
+              <div class="agent-row">
+                <span class="voyant off"></span>
+                <span class="nom">Mlle Lazare</span>
+                <span class="stat">Hors d'onde</span>
+              </div>
+              <div class="agent-row">
+                <span class="voyant on"></span>
+                <span class="nom">Mr. Greaves</span>
+                <span class="stat actif">Sur fréquence</span>
+              </div>
+
+            </div>
+
+            <div class="ptt-zone">
+              <div class="ptt"><span>PARLER</span></div>
+              <div class="ptt-label">★ Maintenir pour transmettre ★</div>
+            </div>
+
+          </div>
+          <div class="nav-bottom">
+            <div class="item"><svg><use href="#ic-home"/></svg>Dossier</div>
+            <div class="item"><svg><use href="#ic-env"/></svg>Dépêches</div>
+            <div class="item actif"><svg><use href="#ic-radio"/></svg>Émetteur</div>
+            <div class="item"><svg><use href="#ic-users"/></svg>Registre</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 7. TRANSMISSION URGENTE ============ -->
+  <div class="ecran-bloc">
+    <div class="ecran-titre"><span class="ecran-num">N°VII</span>Transmission Urgente</div>
+    <div class="phone">
+      <div class="screen ec-urgent">
+        <div class="screen-inner">
+          <div class="statusbar">
+            <span>03h47</span>
+            <div class="tres">
+              <svg><use href="#ic-signal"/></svg>
+              <svg><use href="#ic-batt"/></svg>
+            </div>
+          </div>
+          <div class="body">
+            <div class="halo h3"></div>
+            <div class="halo h2"></div>
+            <div class="halo"></div>
+
+            <div class="badge-urgent">⚠ TRANSMISSION URGENTE ⚠</div>
+
+            <div class="grand-sceau">
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <!-- œil dans triangle, version sceau -->
+                <polygon points="50,16 86,82 14,82" fill="none" stroke="#f0d9a8" stroke-width="2"/>
+                <polygon points="50,24 80,78 20,78" fill="none" stroke="#f0d9a8" stroke-width="0.6" stroke-dasharray="2 2"/>
+                <path d="M28 60 Q50 44 72 60 Q50 74 28 60 Z" fill="#f0d9a8" stroke="#3a0a0a" stroke-width="1"/>
+                <circle cx="50" cy="60" r="7" fill="#3a0a0a"/>
+                <circle cx="50" cy="60" r="2.5" fill="#f0d9a8"/>
+                <!-- runes périphériques -->
+                <g fill="#f0d9a8" font-family="IM Fell English SC" font-size="6">
+                  <text x="50" y="12" text-anchor="middle">⚜</text>
+                  <text x="14" y="92" text-anchor="middle">✶</text>
+                  <text x="86" y="92" text-anchor="middle">✶</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="nom-agent">Mr. Corbeau</div>
+            <div class="message">tente de vous joindre par fréquence prioritaire</div>
+            <div class="vibration">Vibration intensive en cours</div>
+
+            <div class="actions">
+              <div class="action-bloc">
+                <button class="btn-grd differer">
+                  <svg viewBox="0 0 24 24" style="transform:rotate(135deg)"><use href="#ic-phone"/></svg>
+                </button>
+                <div class="btn-label">Différer</div>
+              </div>
+              <div class="action-bloc">
+                <button class="btn-grd repondre">
+                  <svg viewBox="0 0 24 24"><use href="#ic-phone"/></svg>
+                </button>
+                <div class="btn-label">Répondre</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 8. REGISTRE DES AGENTS ============ -->
+  <div class="ecran-bloc">
+    <div class="ecran-titre"><span class="ecran-num">N°VIII</span>Registre des Agents</div>
+    <div class="phone">
+      <div class="screen ec-reg">
+        <div class="screen-inner">
+          <div class="statusbar">
+            <span>10h22</span>
+            <div class="tres">
+              <svg><use href="#ic-signal"/></svg>
+              <svg><use href="#ic-batt"/></svg>
+            </div>
+          </div>
+          <div class="app-head">
+            <h2>Registre</h2>
+            <svg class="crest" viewBox="0 0 24 24"><use href="#ic-users"/></svg>
+          </div>
+          <div class="body">
+            <div class="recherche">
+              <svg width="12" height="12" viewBox="0 0 24 24"><use href="#ic-search"/></svg>
+              <span>Consulter une fiche...</span>
+            </div>
+
+            <div class="fiche">
+              <div class="portrait"><span class="ini">MC</span></div>
+              <div class="infos">
+                <h4>Mr. Corbeau</h4>
+                <div class="role">Filature & Cryptographie</div>
+                <div class="ligne">
+                  <span>Statut <span class="v">Actif</span></span>
+                  <span>Dernière act. — 14h12</span>
+                </div>
+              </div>
+              <div class="matricule">N°007</div>
+            </div>
+
+            <div class="fiche">
+              <div class="portrait"><span class="ini">DV</span></div>
+              <div class="infos">
+                <h4>Dr. Vesper</h4>
+                <div class="role">Occulte & Médecine Légale</div>
+                <div class="ligne">
+                  <span>Statut <span class="v">Actif</span></span>
+                  <span>Dernière act. — 09h44</span>
+                </div>
+              </div>
+              <div class="matricule">N°013</div>
+            </div>
+
+            <div class="fiche">
+              <div class="portrait"><span class="ini">MF</span></div>
+              <div class="infos">
+                <h4>Mme Frostwell</h4>
+                <div class="role">Surveillance — Quais</div>
+                <div class="ligne">
+                  <span>Statut <span class="v">Actif</span></span>
+                  <span>Dernière act. — 08h17</span>
+                </div>
+              </div>
+              <div class="matricule">N°021</div>
+            </div>
+
+            <div class="fiche">
+              <div class="portrait"><span class="ini">CA</span></div>
+              <div class="infos">
+                <h4>Capt. Aldwin</h4>
+                <div class="role">Ancien — Royal Navy</div>
+                <div class="ligne">
+                  <span>Statut <span class="r">En mission</span></span>
+                  <span>Dernière act. — Hier 23h08</span>
+                </div>
+              </div>
+              <div class="matricule">N°004</div>
+            </div>
+
+            <div class="fiche">
+              <div class="portrait"><span class="ini">ML</span></div>
+              <div class="infos">
+                <h4>Mlle Lazare</h4>
+                <div class="role">Médium — Section IX</div>
+                <div class="ligne">
+                  <span>Statut <span class="r">Hors d'onde</span></span>
+                  <span>Dernière act. — 26 brum.</span>
+                </div>
+              </div>
+              <div class="matricule">N°017</div>
+            </div>
+
+          </div>
+          <div class="nav-bottom">
+            <div class="item"><svg><use href="#ic-home"/></svg>Dossier</div>
+            <div class="item"><svg><use href="#ic-env"/></svg>Dépêches</div>
+            <div class="item"><svg><use href="#ic-radio"/></svg>Émetteur</div>
+            <div class="item actif"><svg><use href="#ic-users"/></svg>Registre</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="pied">
+  ⚜ Sub Rosa — Veritas in Tenebris ⚜ &nbsp;·&nbsp; Bureau VII &nbsp;·&nbsp; Maquettes statiques
+</footer>
+
+</body>
+</html>
