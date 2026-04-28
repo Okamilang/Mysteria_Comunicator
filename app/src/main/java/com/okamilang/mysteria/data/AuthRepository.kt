@@ -64,6 +64,22 @@ object AuthRepository {
             email = doc.getString("email") ?: u.email.orEmpty()
         )
     }
+
+    /** Liste tous les agents inscrits, à l'exclusion de l'agent courant. */
+    suspend fun listOtherAgents(): Result<List<Agent>> = runCatching {
+        val meUid = auth.currentUser?.uid
+        db.collection("agents").get().await().documents
+            .mapNotNull { d ->
+                val uid = d.getString("uid") ?: d.id
+                if (uid == meUid) return@mapNotNull null
+                Agent(
+                    uid = uid,
+                    codeName = d.getString("codeName") ?: return@mapNotNull null,
+                    email = d.getString("email").orEmpty()
+                )
+            }
+            .sortedBy { it.codeName.lowercase() }
+    }
 }
 
 data class Agent(
