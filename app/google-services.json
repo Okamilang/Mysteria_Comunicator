@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "524991158322",
+    "project_id": "myseriacom",
+    "storage_bucket": "myseriacom.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524991158322:android:fc495464704d835440442b",
+        "android_client_info": {
+          "package_name": "com.okamilang.mysteria"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwLY_STGNTWJnKjQbkNakWq7F0J1C5l1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

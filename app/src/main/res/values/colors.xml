@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Palette Mysteria — noir 1930 + occultisme + steampunk -->
+    <color name="brun_tres_sombre">#FF1A1410</color>
+    <color name="brun_fonce">#FF2A1F17</color>
+    <color name="papier">#FFD9C39A</color>
+    <color name="papier_clair">#FFE9D6AD</color>
+    <color name="papier_fonce">#FFB89A6A</color>
+    <color name="encre">#FF1A0F08</color>
+    <color name="encre_clair">#FF3A2A1C</color>
+    <color name="laiton">#FFB8893A</color>
+    <color name="laiton_clair">#FFD9A754</color>
+    <color name="laiton_sombre">#FF7A5520</color>
+    <color name="rouge_sceau">#FF6E1E1E</color>
+    <color name="rouge_vif">#FFA32A2A</color>
+    <color name="vert_occulte">#FF4A6A3E</color>
+    <color name="vert_vif">#FF6E9050</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
