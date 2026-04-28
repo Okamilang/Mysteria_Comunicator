@@ -3,7 +3,6 @@ package com.okamilang.mysteria.data
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -52,6 +51,8 @@ object MessagesRepository {
 
     /**
      * Flux des dépêches reçues par l'agent courant, plus récentes en tête.
+     * On évite l'orderBy côté serveur (qui exigerait un index composite avec toUid)
+     * et on trie côté client — pour <= 50 messages c'est sans coût.
      */
     fun observeInbox(): Flow<List<Message>> = callbackFlow {
         val me = auth.currentUser
@@ -62,10 +63,13 @@ object MessagesRepository {
         }
         val reg = db.collection("messages")
             .whereEqualTo("toUid", me.uid)
-            .orderBy("sentAt", Query.Direction.DESCENDING)
             .limit(50)
             .addSnapshotListener { snap, err ->
-                if (err != null) { close(err); return@addSnapshotListener }
+                if (err != null) {
+                    android.util.Log.e("Mysteria", "observeInbox error", err)
+                    trySend(emptyList())
+                    return@addSnapshotListener
+                }
                 val list = snap?.documents.orEmpty().mapNotNull { d ->
                     Message(
                         id = d.id,
@@ -76,7 +80,7 @@ object MessagesRepository {
                         body = d.getString("body") ?: "",
                         sentAt = d.getTimestamp("sentAt")?.toDate()?.time ?: 0L
                     )
-                }
+                }.sortedByDescending { it.sentAt }
                 trySend(list)
             }
         awaitClose { reg.remove() }
