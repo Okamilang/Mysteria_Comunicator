@@ -23,9 +23,17 @@ export const onMessageCreated = onDocumentCreated(
 
     const toUid: string = data.toUid;
     const fromCode: string = data.fromCode ?? "Agent inconnu";
-    const body: string = data.body ?? "";
+    const rawBody: string = data.body ?? "";
     const urgent: boolean = data.urgent === true;
     const messageId: string = event.params.messageId;
+    const attachmentType: string | undefined = data.attachmentType;
+
+    const body: string = (() => {
+      if (attachmentType === "image")
+        return rawBody.length > 0 ? `📷 ${rawBody}` : "📷 Plaque photographique";
+      if (attachmentType === "audio") return "🎙 Cylindre phonographique";
+      return rawBody;
+    })();
 
     if (!toUid) {
       console.warn("Dépêche sans destinataire, abandon", messageId);

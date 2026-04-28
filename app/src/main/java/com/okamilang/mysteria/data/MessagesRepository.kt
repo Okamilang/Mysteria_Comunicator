@@ -1,31 +1,79 @@
 package com.okamilang.mysteria.data
 
+import android.content.Context
+import android.net.Uri
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import java.io.File
+import java.util.UUID
 
 object MessagesRepository {
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+    private val storage = FirebaseStorage.getInstance()
 
-    /**
-     * Envoie une dépêche au destinataire identifié par son nom de code.
-     * Le destinataire doit exister dans la collection `agents`.
-     * Si `urgent` est vrai, la Cloud Function réveillera le téléphone du
-     * destinataire pour afficher l'écran de Transmission Urgente.
-     */
+    /** Envoie une dépêche texte. */
     suspend fun sendMessage(
         toCodeName: String,
         body: String,
         urgent: Boolean = false
     ): Result<Unit> = runCatching {
-        val me = auth.currentUser ?: error("Agent non identifié")
         require(body.isNotBlank()) { "Dépêche vide" }
+        envoyer(toCodeName, body.trim(), urgent, null, null, null)
+    }
+
+    /** Envoie une plaque photographique (image), depuis une URI locale. */
+    suspend fun sendImage(
+        context: Context,
+        toCodeName: String,
+        imageUri: Uri,
+        legende: String = "",
+        urgent: Boolean = false
+    ): Result<Unit> = runCatching {
+        val me = auth.currentUser ?: error("Agent non identifié")
+        val ext = guessExtension(context, imageUri, default = "jpg")
+        val ref = storage.reference
+            .child("messages/${me.uid}/${UUID.randomUUID()}.$ext")
+        context.contentResolver.openInputStream(imageUri).use { stream ->
+            requireNotNull(stream) { "Impossible de lire l'image sélectionnée" }
+            ref.putStream(stream).await()
+        }
+        val url = ref.downloadUrl.await().toString()
+        envoyer(toCodeName, legende.trim(), urgent, "image", url, null)
+    }
+
+    /** Envoie un cylindre phonographique (vocal). */
+    suspend fun sendAudio(
+        toCodeName: String,
+        audioFile: File,
+        durationMs: Long,
+        urgent: Boolean = false
+    ): Result<Unit> = runCatching {
+        val me = auth.currentUser ?: error("Agent non identifié")
+        require(audioFile.exists() && audioFile.length() > 0) { "Cylindre invalide" }
+        val ref = storage.reference
+            .child("messages/${me.uid}/${UUID.randomUUID()}.m4a")
+        ref.putFile(Uri.fromFile(audioFile)).await()
+        val url = ref.downloadUrl.await().toString()
+        envoyer(toCodeName, "", urgent, "audio", url, durationMs)
+    }
+
+    private suspend fun envoyer(
+        toCodeName: String,
+        body: String,
+        urgent: Boolean,
+        attachmentType: String?,
+        attachmentUrl: String?,
+        audioDurationMs: Long?
+    ) {
+        val me = auth.currentUser ?: error("Agent non identifié")
 
         val cleanCode = toCodeName.trim()
         require(cleanCode.isNotEmpty()) { "Destinataire requis" }
@@ -42,24 +90,36 @@ object MessagesRepository {
         val myDoc = db.collection("agents").document(me.uid).get().await()
         val fromCode = myDoc.getString("codeName") ?: me.email.orEmpty()
 
-        db.collection("messages").add(
-            mapOf(
-                "fromUid" to me.uid,
-                "fromCode" to fromCode,
-                "toUid" to toUid,
-                "toCode" to cleanCode,
-                "body" to body.trim(),
-                "sentAt" to Timestamp.now(),
-                "participants" to listOf(me.uid, toUid),
-                "urgent" to urgent
-            )
-        ).await()
+        val payload = mutableMapOf<String, Any?>(
+            "fromUid" to me.uid,
+            "fromCode" to fromCode,
+            "toUid" to toUid,
+            "toCode" to cleanCode,
+            "body" to body,
+            "sentAt" to Timestamp.now(),
+            "participants" to listOf(me.uid, toUid),
+            "urgent" to urgent
+        )
+        if (attachmentType != null) {
+            payload["attachmentType"] = attachmentType
+            payload["attachmentUrl"] = attachmentUrl
+            if (audioDurationMs != null) payload["audioDurationMs"] = audioDurationMs
+        }
+
+        db.collection("messages").add(payload).await()
     }
 
-    /**
-     * Flux de toutes les dépêches où l'agent courant est impliqué (envoyées ou reçues).
-     * Tri client pour éviter d'exiger un index composite.
-     */
+    private fun guessExtension(context: Context, uri: Uri, default: String): String {
+        val mime = context.contentResolver.getType(uri).orEmpty()
+        return when {
+            mime.contains("png") -> "png"
+            mime.contains("webp") -> "webp"
+            mime.contains("jpeg") || mime.contains("jpg") -> "jpg"
+            else -> default
+        }
+    }
+
+    /** Toutes les dépêches où l'agent courant est impliqué (envoyées ou reçues). */
     fun observeAllMyMessages(): Flow<List<Message>> = callbackFlow {
         val me = auth.currentUser
         if (me == null) {
@@ -83,10 +143,7 @@ object MessagesRepository {
         awaitClose { reg.remove() }
     }
 
-    /**
-     * Flux des messages d'une conversation entre l'agent courant et `otherUid`,
-     * du plus ancien au plus récent (ordre naturel de fil de discussion).
-     */
+    /** Messages d'une conversation entre l'agent courant et `otherUid`. */
     fun observeConversation(otherUid: String): Flow<List<Message>> = callbackFlow {
         val me = auth.currentUser
         if (me == null) {
@@ -128,7 +185,10 @@ object MessagesRepository {
             toCode = d.getString("toCode") ?: "",
             body = d.getString("body") ?: "",
             sentAt = d.getTimestamp("sentAt")?.toDate()?.time ?: 0L,
-            participants = parts
+            participants = parts,
+            attachmentType = d.getString("attachmentType"),
+            attachmentUrl = d.getString("attachmentUrl"),
+            audioDurationMs = d.getLong("audioDurationMs")
         )
     }
 }
@@ -141,7 +201,10 @@ data class Message(
     val toCode: String,
     val body: String,
     val sentAt: Long,
-    val participants: List<String> = emptyList()
+    val participants: List<String> = emptyList(),
+    val attachmentType: String? = null,
+    val attachmentUrl: String? = null,
+    val audioDurationMs: Long? = null
 )
 
 /** Résumé d'une conversation pour l'écran Dépêches. */
@@ -161,10 +224,15 @@ fun groupConversations(messages: List<Message>, meUid: String): List<Conversatio
         .map { (cle, list) ->
             val (otherUid, otherCode) = cle
             val dernier = list.maxBy { it.sentAt }
+            val preview = when (dernier.attachmentType) {
+                "image" -> "📷 Plaque photographique"
+                "audio" -> "🎙 Cylindre"
+                else -> dernier.body
+            }
             ConversationSummary(
                 otherUid = otherUid,
                 otherCode = otherCode,
-                dernierMessage = dernier.body,
+                dernierMessage = preview,
                 dernierEnvoiMs = dernier.sentAt,
                 dernierEstDeMoi = dernier.fromUid == meUid
             )
