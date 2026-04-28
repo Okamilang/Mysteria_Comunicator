@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.PriorityHigh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -39,6 +40,7 @@ fun ConversationScreen(
         .collectAsState(initial = emptyList<Message>())
     val meUid = AuthRepository.currentUser?.uid.orEmpty()
     var saisie by remember { mutableStateOf("") }
+    var modeUrgent by remember { mutableStateOf(false) }
     var envoiEnCours by remember { mutableStateOf(false) }
     var erreur by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
@@ -84,17 +86,23 @@ fun ConversationScreen(
             BarreSaisie(
                 texte = saisie,
                 onTexte = { saisie = it },
+                modeUrgent = modeUrgent,
+                onBasculerUrgent = { modeUrgent = !modeUrgent },
                 envoiEnCours = envoiEnCours,
                 onEnvoyer = {
                     if (saisie.isBlank()) return@BarreSaisie
                     val corps = saisie.trim()
+                    val urgent = modeUrgent
                     erreur = null
                     envoiEnCours = true
                     scope.launch {
-                        val res = MessagesRepository.sendMessage(otherCode, corps)
+                        val res = MessagesRepository.sendMessage(otherCode, corps, urgent)
                         envoiEnCours = false
                         res.fold(
-                            onSuccess = { saisie = "" },
+                            onSuccess = {
+                                saisie = ""
+                                modeUrgent = false
+                            },
                             onFailure = { erreur = it.message ?: "Échec de l'expédition" }
                         )
                     }
@@ -185,44 +193,75 @@ private fun BulleMessage(msg: Message, deMoi: Boolean) {
 private fun BarreSaisie(
     texte: String,
     onTexte: (String) -> Unit,
+    modeUrgent: Boolean,
+    onBasculerUrgent: () -> Unit,
     envoiEnCours: Boolean,
     onEnvoyer: () -> Unit
 ) {
     Surface(color = PapierFonce, tonalElevation = 0.dp) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = 8.dp, vertical = 6.dp)
         ) {
-            OutlinedTextField(
-                value = texte,
-                onValueChange = onTexte,
-                placeholder = { Text("Rédigez votre dépêche...", color = EncreClair) },
-                modifier = Modifier.weight(1f).background(PapierClair),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Encre,
-                    unfocusedTextColor = Encre,
-                    focusedBorderColor = Encre,
-                    unfocusedBorderColor = LaitonSombre,
-                    cursorColor = Encre,
-                    focusedContainerColor = PapierClair,
-                    unfocusedContainerColor = PapierClair
-                ),
-                maxLines = 4
-            )
-            FilledIconButton(
-                onClick = onEnvoyer,
-                enabled = !envoiEnCours && texte.isNotBlank(),
-                colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = RougeSceau,
-                    contentColor = PapierClair,
-                    disabledContainerColor = LaitonSombre,
-                    disabledContentColor = PapierClair
+            if (modeUrgent) {
+                Text(
+                    text = "⚠ MODE URGENT — vibration intensive chez le destinataire ⚠",
+                    color = RougeSceau,
+                    style = MaterialTheme.typography.labelSmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp)
                 )
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Expédier")
+                FilledIconButton(
+                    onClick = onBasculerUrgent,
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = if (modeUrgent) RougeSceau else PapierClair,
+                        contentColor = if (modeUrgent) PapierClair else LaitonSombre
+                    )
+                ) {
+                    Icon(
+                        Icons.Default.PriorityHigh,
+                        contentDescription = if (modeUrgent) "Désactiver mode urgent" else "Activer mode urgent"
+                    )
+                }
+                OutlinedTextField(
+                    value = texte,
+                    onValueChange = onTexte,
+                    placeholder = {
+                        Text(
+                            if (modeUrgent) "Dépêche urgente..." else "Rédigez votre dépêche...",
+                            color = EncreClair
+                        )
+                    },
+                    modifier = Modifier.weight(1f).background(PapierClair),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = Encre,
+                        unfocusedTextColor = Encre,
+                        focusedBorderColor = if (modeUrgent) RougeSceau else Encre,
+                        unfocusedBorderColor = if (modeUrgent) RougeSceau else LaitonSombre,
+                        cursorColor = Encre,
+                        focusedContainerColor = PapierClair,
+                        unfocusedContainerColor = PapierClair
+                    ),
+                    maxLines = 4
+                )
+                FilledIconButton(
+                    onClick = onEnvoyer,
+                    enabled = !envoiEnCours && texte.isNotBlank(),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = RougeSceau,
+                        contentColor = PapierClair,
+                        disabledContainerColor = LaitonSombre,
+                        disabledContentColor = PapierClair
+                    )
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Expédier")
+                }
             }
         }
     }

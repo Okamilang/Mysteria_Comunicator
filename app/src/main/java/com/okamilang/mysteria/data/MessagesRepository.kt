@@ -16,8 +16,14 @@ object MessagesRepository {
     /**
      * Envoie une dépêche au destinataire identifié par son nom de code.
      * Le destinataire doit exister dans la collection `agents`.
+     * Si `urgent` est vrai, la Cloud Function réveillera le téléphone du
+     * destinataire pour afficher l'écran de Transmission Urgente.
      */
-    suspend fun sendMessage(toCodeName: String, body: String): Result<Unit> = runCatching {
+    suspend fun sendMessage(
+        toCodeName: String,
+        body: String,
+        urgent: Boolean = false
+    ): Result<Unit> = runCatching {
         val me = auth.currentUser ?: error("Agent non identifié")
         require(body.isNotBlank()) { "Dépêche vide" }
 
@@ -44,7 +50,8 @@ object MessagesRepository {
                 "toCode" to cleanCode,
                 "body" to body.trim(),
                 "sentAt" to Timestamp.now(),
-                "participants" to listOf(me.uid, toUid)
+                "participants" to listOf(me.uid, toUid),
+                "urgent" to urgent
             )
         ).await()
     }
