@@ -50,11 +50,10 @@ object MessagesRepository {
     }
 
     /**
-     * Flux des dépêches reçues par l'agent courant, plus récentes en tête.
-     * On évite l'orderBy côté serveur (qui exigerait un index composite avec toUid)
-     * et on trie côté client — pour <= 50 messages c'est sans coût.
+     * Flux de toutes les dépêches où l'agent courant est impliqué (envoyées ou reçues).
+     * Tri client pour éviter d'exiger un index composite.
      */
-    fun observeInbox(): Flow<List<Message>> = callbackFlow {
+    fun observeAllMyMessages(): Flow<List<Message>> = callbackFlow {
         val me = auth.currentUser
         if (me == null) {
             trySend(emptyList())
@@ -62,28 +61,68 @@ object MessagesRepository {
             return@callbackFlow
         }
         val reg = db.collection("messages")
-            .whereEqualTo("toUid", me.uid)
-            .limit(50)
+            .whereArrayContains("participants", me.uid)
+            .limit(500)
             .addSnapshotListener { snap, err ->
                 if (err != null) {
-                    android.util.Log.e("Mysteria", "observeInbox error", err)
+                    android.util.Log.e("Mysteria", "observeAllMyMessages error", err)
                     trySend(emptyList())
                     return@addSnapshotListener
                 }
-                val list = snap?.documents.orEmpty().mapNotNull { d ->
-                    Message(
-                        id = d.id,
-                        fromUid = d.getString("fromUid") ?: return@mapNotNull null,
-                        fromCode = d.getString("fromCode") ?: "Agent inconnu",
-                        toUid = d.getString("toUid") ?: return@mapNotNull null,
-                        toCode = d.getString("toCode") ?: "",
-                        body = d.getString("body") ?: "",
-                        sentAt = d.getTimestamp("sentAt")?.toDate()?.time ?: 0L
-                    )
-                }.sortedByDescending { it.sentAt }
+                val list = snap?.documents.orEmpty().mapNotNull(::mapDoc)
+                    .sortedByDescending { it.sentAt }
                 trySend(list)
             }
         awaitClose { reg.remove() }
+    }
+
+    /**
+     * Flux des messages d'une conversation entre l'agent courant et `otherUid`,
+     * du plus ancien au plus récent (ordre naturel de fil de discussion).
+     */
+    fun observeConversation(otherUid: String): Flow<List<Message>> = callbackFlow {
+        val me = auth.currentUser
+        if (me == null) {
+            trySend(emptyList())
+            close()
+            return@callbackFlow
+        }
+        val reg = db.collection("messages")
+            .whereArrayContains("participants", me.uid)
+            .limit(500)
+            .addSnapshotListener { snap, err ->
+                if (err != null) {
+                    android.util.Log.e("Mysteria", "observeConversation error", err)
+                    trySend(emptyList())
+                    return@addSnapshotListener
+                }
+                val list = snap?.documents.orEmpty()
+                    .mapNotNull(::mapDoc)
+                    .filter { msg ->
+                        val parts = msg.participants
+                        parts.contains(me.uid) && parts.contains(otherUid)
+                    }
+                    .sortedBy { it.sentAt }
+                trySend(list)
+            }
+        awaitClose { reg.remove() }
+    }
+
+    private fun mapDoc(d: com.google.firebase.firestore.DocumentSnapshot): Message? {
+        val from = d.getString("fromUid") ?: return null
+        val to = d.getString("toUid") ?: return null
+        @Suppress("UNCHECKED_CAST")
+        val parts = (d.get("participants") as? List<String>) ?: listOf(from, to)
+        return Message(
+            id = d.id,
+            fromUid = from,
+            fromCode = d.getString("fromCode") ?: "Agent inconnu",
+            toUid = to,
+            toCode = d.getString("toCode") ?: "",
+            body = d.getString("body") ?: "",
+            sentAt = d.getTimestamp("sentAt")?.toDate()?.time ?: 0L,
+            participants = parts
+        )
     }
 }
 
@@ -94,5 +133,34 @@ data class Message(
     val toUid: String,
     val toCode: String,
     val body: String,
-    val sentAt: Long
+    val sentAt: Long,
+    val participants: List<String> = emptyList()
 )
+
+/** Résumé d'une conversation pour l'écran Dépêches. */
+data class ConversationSummary(
+    val otherUid: String,
+    val otherCode: String,
+    val dernierMessage: String,
+    val dernierEnvoiMs: Long,
+    val dernierEstDeMoi: Boolean
+)
+
+/** Regroupe une liste de messages par interlocuteur (autre que `meUid`). */
+fun groupConversations(messages: List<Message>, meUid: String): List<ConversationSummary> {
+    if (meUid.isBlank()) return emptyList()
+    return messages
+        .groupBy { msg -> if (msg.fromUid == meUid) msg.toUid to msg.toCode else msg.fromUid to msg.fromCode }
+        .map { (cle, list) ->
+            val (otherUid, otherCode) = cle
+            val dernier = list.maxBy { it.sentAt }
+            ConversationSummary(
+                otherUid = otherUid,
+                otherCode = otherCode,
+                dernierMessage = dernier.body,
+                dernierEnvoiMs = dernier.sentAt,
+                dernierEstDeMoi = dernier.fromUid == meUid
+            )
+        }
+        .sortedByDescending { it.dernierEnvoiMs }
+}

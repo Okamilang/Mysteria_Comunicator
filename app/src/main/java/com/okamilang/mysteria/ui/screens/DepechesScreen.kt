@@ -2,23 +2,28 @@ package com.okamilang.mysteria.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.foundation.shape.RectangleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Group
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.okamilang.mysteria.data.AuthRepository
+import com.okamilang.mysteria.data.ConversationSummary
 import com.okamilang.mysteria.data.Message
 import com.okamilang.mysteria.data.MessagesRepository
+import com.okamilang.mysteria.data.groupConversations
 import com.okamilang.mysteria.ui.components.PapierSurface
 import com.okamilang.mysteria.ui.theme.Encre
 import com.okamilang.mysteria.ui.theme.EncreClair
@@ -34,10 +39,13 @@ import java.util.Locale
 @Composable
 fun DepechesScreen(
     onSignOut: () -> Unit,
-    onNouvelleDepeche: () -> Unit
+    onOuvrirConversation: (otherUid: String, otherCode: String) -> Unit,
+    onOuvrirRegistre: () -> Unit
 ) {
-    val messages by remember { MessagesRepository.observeInbox() }
+    val messages by remember { MessagesRepository.observeAllMyMessages() }
         .collectAsState(initial = emptyList<Message>())
+    val meUid = AuthRepository.currentUser?.uid.orEmpty()
+    val conversations = remember(messages, meUid) { groupConversations(messages, meUid) }
 
     Scaffold(
         topBar = {
@@ -55,6 +63,9 @@ fun DepechesScreen(
                     actionIconContentColor = Encre
                 ),
                 actions = {
+                    IconButton(onClick = onOuvrirRegistre) {
+                        Icon(Icons.Default.Group, contentDescription = "Registre", tint = Encre)
+                    }
                     IconButton(onClick = { AuthRepository.signOut(); onSignOut() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.Logout,
@@ -67,7 +78,7 @@ fun DepechesScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onNouvelleDepeche,
+                onClick = onOuvrirRegistre,
                 containerColor = RougeSceau,
                 contentColor = PapierClair,
                 shape = CircleShape
@@ -81,20 +92,23 @@ fun DepechesScreen(
             modifier = Modifier.fillMaxSize().padding(padding),
             padding = PaddingValues(12.dp)
         ) {
-            if (messages.isEmpty()) {
+            if (conversations.isEmpty()) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
-                        "Aucune dépêche reçue.\nLa correspondance se développe avec le temps.",
+                        "Aucune correspondance.\nUtilisez le Registre pour entrer en contact.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = EncreClair,
                         textAlign = TextAlign.Center
                     )
                 }
             } else {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    items(messages, key = { it.id }) { TelegrammeItem(it) }
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    items(conversations, key = { it.otherUid }) { conv ->
+                        ConversationItem(
+                            conv = conv,
+                            onClick = { onOuvrirConversation(conv.otherUid, conv.otherCode) }
+                        )
+                    }
                 }
             }
         }
@@ -102,47 +116,51 @@ fun DepechesScreen(
 }
 
 @Composable
-private fun TelegrammeItem(m: Message) {
+private fun ConversationItem(conv: ConversationSummary, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(PapierClair)
             .border(1.dp, LaitonSombre, RectangleShape)
+            .clickable(onClick = onClick)
             .padding(12.dp)
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                SceauInitiale(m.fromCode)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            SceauInitiale(conv.otherCode)
+            Column(Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        conv.otherCode,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Encre,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        formatHeure(conv.dernierEnvoiMs),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = EncreClair
+                    )
+                }
                 Text(
-                    m.fromCode,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Encre,
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    formatHeure(m.sentAt),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = EncreClair
+                    text = (if (conv.dernierEstDeMoi) "→ " else "") + conv.dernierMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = EncreClair,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
-            HorizontalDivider(color = LaitonSombre.copy(alpha = .5f))
-            Text(
-                m.body,
-                style = MaterialTheme.typography.bodyMedium,
-                color = EncreClair
-            )
         }
     }
 }
 
 @Composable
-private fun SceauInitiale(code: String) {
+internal fun SceauInitiale(code: String) {
     Box(
         modifier = Modifier
-            .size(34.dp)
+            .size(40.dp)
             .background(RougeSceau, CircleShape)
             .border(1.dp, Encre, CircleShape),
         contentAlignment = Alignment.Center
@@ -155,7 +173,7 @@ private fun SceauInitiale(code: String) {
     }
 }
 
-private fun formatHeure(timestampMs: Long): String {
+internal fun formatHeure(timestampMs: Long): String {
     if (timestampMs == 0L) return "—"
     val now = System.currentTimeMillis()
     val date = Date(timestampMs)
